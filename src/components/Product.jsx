@@ -6,6 +6,7 @@ export default function Product({ item }) {
     <Link
       href={`/product/${item.id}`}
       className="w-full shadow-md flex flex-col aspect-square"
+      scroll={true}
     >
       <img
         src={item.img}
@@ -16,7 +17,7 @@ export default function Product({ item }) {
       <div className="flex flex-col h-[30%] justify-center p-4">
         <h3 className="font-medium text-left text-lg">{item.name}</h3>
         <p className="text-red-500 text-xl font-medium text-right">
-          {item.price}$
+          {item.price} COP
         </p>
       </div>
     </Link>

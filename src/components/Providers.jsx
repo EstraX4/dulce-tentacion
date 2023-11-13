@@ -11,12 +11,10 @@ export default function Providers({ children }) {
   });
   return (
     <>
-      <ReactLenis root>
         <AuthProvider>
           <Toaster richColors />
           {children}
         </AuthProvider>
-      </ReactLenis>
     </>
   );
 }

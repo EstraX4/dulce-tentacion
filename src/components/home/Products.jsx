@@ -2,49 +2,8 @@
 
 import React from "react";
 import Product from "../Product";
+import products from "../../data.json"; 
 
-const products = [
-  {
-    name: "Producto 1",
-    price: 100,
-    img: "/images/products/product1.png",
-  },
-  {
-    name: "Producto 2",
-    price: 100,
-    img: "/images/products/product1.png",
-  },
-  {
-    name: "Producto 3",
-    price: 100,
-    img: "/images/products/product1.png",
-  },
-  {
-    name: "Producto 4",
-    price: 100,
-    img: "/images/products/product1.png",
-  },
-  {
-    name: "Producto 5",
-    price: 100,
-    img: "/images/products/product1.png",
-  },
-  {
-    name: "Producto 6",
-    price: 100,
-    img: "/images/products/product1.png",
-  },
-  {
-    name: "Producto 7",
-    price: 100,
-    img: "/images/products/product1.png",
-  },
-  {
-    name: "Producto 8",
-    price: 100,
-    img: "/images/products/product1.png",
-  },
-];
 export default function Products() {
   return (
     <section className="w-full px-10 md:px-40 py-10 md:py-20 flex flex-col justify-center items-center gap-10">
