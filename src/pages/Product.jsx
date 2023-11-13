@@ -13,11 +13,11 @@ export default function Product({ item }) {
             className="w-full h-[70%] object-initial"
             draggable="false"
           />
-          <h2 className="text-1xl text-center md:text-2xl font-medium mt-4">
+          <h2 className="text-1xl text-center md:text-2xl font-medium mt-0 sm:mt-4">
             Todo hecho por expertos, Dulce Tentación está hecho para tus
             momentos de placer
           </h2>
-          <h2 className="text-1xl sm:text-5xl text-red-500 text-center md:text-2xl font-medium mt-4">
+          <h2 className="text-1xl sm:text-5xl text-red-500 text-center md:text-2xl font-medium mt-4 pb-12 sm:pb-0">
             DOMICILIO GRATIS
           </h2>
         </div>
