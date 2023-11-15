@@ -7,6 +7,13 @@ import HotEmoji from "./emojis/HotEmoji";
 import SmirkingFace from "./emojis/SmirkingFace";
 
 export default function User() {
+  const links = [
+    {
+      name: "Gana dinero",
+      href: "/",
+    },
+  ];
+
   const { user, logout } = useAuth();
 
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
@@ -38,7 +45,7 @@ export default function User() {
               alt="user photo"
             /> */}
             <div className="w-8 h-8 rounded-full flex justify-center items-center">
-              <SmirkingFace  />
+              <SmirkingFace />
             </div>
           </button>
 
@@ -56,21 +63,15 @@ export default function User() {
               className="py-2 text-sm text-gray-700 "
               aria-labelledby="dropdownUserAvatarButton"
             >
-              <li>
-                <a href="#" className="block px-4 py-2 hover:bg-gray-100  ">
-                  Dashboard
-                </a>
-              </li>
-              <li>
-                <a href="#" className="block px-4 py-2 hover:bg-gray-100 ">
-                  Settings
-                </a>
-              </li>
-              <li>
-                <a href="#" className="block px-4 py-2 hover:bg-gray-100 ">
-                  Earnings
-                </a>
-              </li>
+              {links.map((link) => (
+                <li key={link.name} onClick={() => setDropdownOpen(false)}>
+                  <Link href={link.href}>
+                    <p className="block px-4 py-2 hover:bg-gray-100 w-full text-left">
+                      {link.name}
+                    </p>
+                  </Link>
+                </li>
+              ))}
             </ul>
             <div className="py-2">
               <button
@@ -80,7 +81,7 @@ export default function User() {
                 }}
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
               >
-                Sign out
+                Cerrar sesión
               </button>
             </div>
           </div>

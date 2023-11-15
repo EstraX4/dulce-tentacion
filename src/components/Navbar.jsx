@@ -3,25 +3,26 @@
 import { IconShoppingCart, IconUser } from "@tabler/icons-react";
 import Link from "next/link";
 import React, { useState } from "react";
-import { MagicMotion } from "react-magic-motion";
 import User from "./User";
+import { useCart } from "@/context/CartContext";
 
 export default function Navbar() {
   const links = [
     {
-      name: "Home",
+      name: "Inicio",
       href: "/",
     },
     {
-      name: "About",
-      href: "/about",
+      name: "Catálogo",
+      href: "/catalogue",
     },
     {
-      name: "Contact",
+      name: "Contactanos",
       href: "/contact",
     },
   ];
 
+  const { cart } = useCart();
   const [navbarOpen, setNavbarOpen] = useState(false);
 
   return (
@@ -39,15 +40,18 @@ export default function Navbar() {
             />
           </Link>
           <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-            {/* <button
-                type="button"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
-                Get started
-              </button> */}
             <div className="flex justify-center items-center gap-4 text-gray-500 ">
               <User />
-              <IconShoppingCart />
+              <Link href="/cart" className="relative">
+                {cart.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 rounded-full text-white text-xs px-1">
+                    {cart.length}
+                  </span>
+                )}
+                <div className="text-gray-500 hover:text-black transition duration-300 ease-in-out">
+                  <IconShoppingCart />
+                </div>
+              </Link>
             </div>
             <button
               type="button"
