@@ -1,11 +1,13 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { MagicMotion } from "react-magic-motion";
 
 export default function page() {
+  const { user } = useAuth()
   const { cart, removeFromCart } = useCart();
   const [total, setTotal] = useState(0);
 
@@ -70,9 +72,9 @@ export default function page() {
                   Los impuestos y gastos de envío se calcularán posteriormente
                 </p>
               </div>
-              <button className="bg-red-500 text-white px-8 py-2 rounded-lg">
+              <Link href={user ? "/details" : "/login"} className="bg-red-500 text-white px-8 py-2 rounded-lg">
                 Pedido
-              </button>
+              </Link>
             </div>
           </div>
         </MagicMotion>
