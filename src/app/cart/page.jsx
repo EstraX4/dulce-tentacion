@@ -5,24 +5,16 @@ import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { MagicMotion } from "react-magic-motion";
+import { formatPrice } from "@/utils/functions";
 
 export default function page() {
   const { user } = useAuth()
-  const { cart, removeFromCart } = useCart();
-  const [total, setTotal] = useState(0);
-
-  useEffect(() => {
-    let total = 0;
-    cart.forEach((item) => {
-      total += parseInt(item.price);
-    });
-    setTotal(total);
-  }, [cart]);
+  const { cart, removeFromCart, total } = useCart();
 
   return (
     <section className="w-full px-10 md:px-40 py-10 md:py-20 flex flex-col justify-center items-center">
       <h1 className="text-4xl font-bold mb-5">Tu carrito</h1>
-      <Link href="/">
+      <Link href="/catalogue">
         <p className="text-red-500">Seguir comprando</p>
       </Link>
       {cart.length > 0 ? (
@@ -39,10 +31,10 @@ export default function page() {
             <hr />
             <div className="w-full overflow-x-auto flex flex-col gap-5">
               {cart.map((item) => (
-                <div className="w-full flex">
+                <div key={item.id} className="w-full flex">
                   <div className="w-[80%] flex gap-5">
                     <img
-                      src={item.img}
+                      src={item.image}
                       alt=""
                       className="w-1/4 md:w-1/6 aspect-square object-cover"
                     />
@@ -59,7 +51,7 @@ export default function page() {
                     </div>
                   </div>
                   <div className="w-[20%]">
-                    <p className="text-base md:text-xl">{item.price} COP</p>
+                    <p className="text-base md:text-xl">{formatPrice(item.price)} COP</p>
                   </div>
                 </div>
               ))}
@@ -67,7 +59,7 @@ export default function page() {
             <hr />
             <div className="w-full flex justify-end gap-5 items-center">
               <div className="flex flex-col items-end">
-                <p className="text-xl font-medium">Sub-Total: {total} COP</p>
+                <p className="text-xl font-medium">Sub-Total: {formatPrice(total)} COP</p>
                 <p className="text-black/50 text-xs">
                   Los impuestos y gastos de envío se calcularán posteriormente
                 </p>

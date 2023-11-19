@@ -4,9 +4,12 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { IconCreditCard, IconShoppingCart } from "@tabler/icons-react";
 import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
+import { formatPrice } from "@/utils/functions";
 
 export default function page() {
   const { user } = useAuth();
+  const { cart, total } = useCart();
 
   /*
     1: Detalles
@@ -29,7 +32,7 @@ export default function page() {
 
   return (
     <div className="flex w-full min-h-[calc(100vh-5rem)]">
-      <div className="bg-white w-1/2 px-10 md:pl-40 md:pr-20 flex flex-col relative py-10">
+      <div className="bg-white w-full md:w-1/2 px-10 md:pl-40 md:pr-20 flex flex-col relative py-10">
         <Navegation setStep={setStep} step={step} />
         {step == 1 && <FormDeatils handleStep={handleStep} />}
         {step == 2 && (
@@ -47,27 +50,42 @@ export default function page() {
           />
         )}
       </div>
-      <div className="flex flex-col pt-20 gap-4 bg-gray-100 w-1/2 px-10 md:pl-20 md:pr-40">
+      <div className="hidden md:flex flex-col pt-20 gap-4 bg-gray-100 w-1/2 px-10 md:pl-20 md:pr-40">
         <div className="flex flex-col gap-4">
           <div className="flex flex-row justify-between">
-            <img
-              className="w-[50%]"
-              src="https://cdn.cobertura360.mx/2023/03/dildo.jpg"
-              alt="producto"
-            />
-            <div className="flex flex-col gap-4">
-              <h2 className="text-black-500 text-xl text-right md:text-2xl text-left pb-4 sm:pb-6">
-                Spiced Mint Candleaft
+            <div className="w-1/2 aspect-square relative">
+              {cart.slice(0, 3).map((item, index) => (
+                <img
+                  className="w-full h-full object-cover absolute"
+                  src={item.image}
+                  alt="producto"
+                  style={{
+                    zIndex: cart.length - index,
+                    left: `${index}rem`,
+                    top: `${index}rem`,
+                  }}
+                />
+              ))}
+            </div>
+            <div className="flex flex-col">
+              <h2 className="text-black-500 text-xl text-right md:text-2xl">
+                  {cart[0]?.name}
               </h2>
-              <h1 className="text-black-500 text-xl text-right md:text-2xl text-left pb-4 sm:pb-6">
-                50.000 COP
+              {cart.length > 1 && (
+                <p className="text-black-500 text-right opacity-60">{`y ${
+                  cart.length - 1
+                } más`}</p>
+              )}
+
+              <h1 className="text-black-500 text-xl text-right md:text-2xl mt-5 pb-4 sm:pb-6">
+                {formatPrice(total)} COP
               </h1>
             </div>
           </div>
 
-          <div className="flex justify-between">
+          <div className="flex justify-between mt-10">
             <p>Subtotal</p>
-            <p>50.000</p>
+            <p>{formatPrice(total)} COP</p>
           </div>
           <div className="flex justify-between">
             <p>Envío</p>
@@ -75,7 +93,7 @@ export default function page() {
           </div>
           <div className="flex justify-between">
             <p>Total</p>
-            <h2>50.000 COP</h2>
+            <h2>{formatPrice(total)} COP</h2>
           </div>
         </div>
       </div>
@@ -85,7 +103,7 @@ export default function page() {
 
 function Navegation({ step, setStep }) {
   return (
-    <nav className="flex absolute top-0 left-40 mt-10" aria-label="Breadcrumb">
+    <nav className="flex absolute top-0 md:left-40 mt-10" aria-label="Breadcrumb">
       <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
         <li className="inline-flex items-center">
           <Link
@@ -431,17 +449,37 @@ function FormPayment({ handleStep, setStep, data }) {
       <h2 className="text-xl font-bold leading-tight tracking-tight text-black-500 md:text-2xl mt-10">
         Método de pago
       </h2>
-      <div >
-        <div className="flex gap-4 flex-row border border-[#B15C5733] p-3 rounded-t-lg bg-gradient-to-r from-red-200 to-gray-200"><IconCreditCard className="text-red-500" /><h1 className="text-red-500 font-semibold">Tarjeta de Credito</h1></div>
+      <div>
+        <div className="flex gap-4 flex-row border border-[#B15C5733] p-3 rounded-t-lg bg-gradient-to-r from-red-200 to-gray-200">
+          <IconCreditCard className="text-red-500" />
+          <h1 className="text-red-500 font-semibold">Tarjeta de Credito</h1>
+        </div>
         <div className="flex gap-4 flex-col border border-[#B15C5733] p-3 rounded-b-lg">
-            <input placeholder="Número de la tarjeta" type="number" className="bg-white border border-gray-300 text-black sm:text-sm rounded-sm focus:ring-red-600 focus:border-red-600 block w-full p-2.5" />
-            <input placeholder="Nombre" className="bg-white border border-gray-300 text-black sm:text-sm rounded-sm focus:ring-red-600 focus:border-red-600 block w-full p-2.5" type="text" />
-            <div className="flex justify-between">
-                <input placeholder="Expiración" className="bg-white border border-gray-300 text-black sm:text-sm rounded-sm focus:ring-red-600 focus:border-red-600 block w-[48%] p-2.5" type="number" />
-                <input placeholder="CVV" className="bg-white border border-gray-300 text-black sm:text-sm rounded-sm focus:ring-red-600 focus:border-red-600 block w-[48%] p-2.5" type="number" />
-            </div>
-        </div></div>
-        
+          <input
+            placeholder="Número de la tarjeta"
+            type="number"
+            className="bg-white border border-gray-300 text-black sm:text-sm rounded-sm focus:ring-red-600 focus:border-red-600 block w-full p-2.5"
+          />
+          <input
+            placeholder="Nombre"
+            className="bg-white border border-gray-300 text-black sm:text-sm rounded-sm focus:ring-red-600 focus:border-red-600 block w-full p-2.5"
+            type="text"
+          />
+          <div className="flex justify-between">
+            <input
+              placeholder="Expiración"
+              className="bg-white border border-gray-300 text-black sm:text-sm rounded-sm focus:ring-red-600 focus:border-red-600 block w-[48%] p-2.5"
+              type="number"
+            />
+            <input
+              placeholder="CVV"
+              className="bg-white border border-gray-300 text-black sm:text-sm rounded-sm focus:ring-red-600 focus:border-red-600 block w-[48%] p-2.5"
+              type="number"
+            />
+          </div>
+        </div>
+      </div>
+
       {/* Secion 3 */}
       <h2 className="text-xl font-bold leading-tight tracking-tight text-black-500 md:text-2xl mt-10">
         Dirección de facturación
@@ -460,7 +498,7 @@ function FormPayment({ handleStep, setStep, data }) {
         </div>
       </div>
 
-       {/* Secion Final */}
+      {/* Secion Final */}
       <div className="flex justify-between items-center pt-5">
         <button
           className="text-red-500 underline decoration-1"
