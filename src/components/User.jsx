@@ -1,3 +1,5 @@
+'use client'
+
 import { useAuth } from "@/context/AuthContext";
 import { LOGIN_PATH } from "@/utils/constants";
 import { IconUser } from "@tabler/icons-react";

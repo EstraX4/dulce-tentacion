@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import { MagicMotion } from "react-magic-motion";
 import { formatPrice } from "@/utils/functions";
 
-export default function page() {
+export default function Page() {
   const { user } = useAuth()
   const { cart, removeFromCart, total } = useCart();
 

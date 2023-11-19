@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/utils/functions";
 
-export default function page() {
+export default function Page() {
   const { user } = useAuth();
   const { cart, total } = useCart();
 
