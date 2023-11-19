@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 
 export default function Page() {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { login } = useAuth();
   const router = useRouter();
 

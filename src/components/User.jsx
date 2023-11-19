@@ -16,6 +16,7 @@ export default function User() {
     },
   ];
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { user, logout } = useAuth();
 
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
