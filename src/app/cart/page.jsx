@@ -8,7 +8,6 @@ import { MagicMotion } from "react-magic-motion";
 import { formatPrice } from "@/utils/functions";
 
 export default function Page() {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { user } = useAuth()
   const { cart, removeFromCart, total } = useCart();
 

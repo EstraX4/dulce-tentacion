@@ -8,7 +8,6 @@ import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/utils/functions";
 
 export default function Page() {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { user } = useAuth();
   const { cart, total } = useCart();
 
@@ -57,6 +56,7 @@ export default function Page() {
             <div className="w-1/2 aspect-square relative">
               {cart.slice(0, 3).map((item, index) => (
                 <img
+                  key={item.id}
                   className="w-full h-full object-cover absolute"
                   src={item.image}
                   alt="producto"
