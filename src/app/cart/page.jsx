@@ -1,7 +1,7 @@
 "use client";
-"use Auth"
+
 import { useCart } from "@/context/CartContext";
-// import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { MagicMotion } from "react-magic-motion";
