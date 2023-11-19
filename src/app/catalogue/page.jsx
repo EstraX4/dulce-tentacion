@@ -1,12 +1,9 @@
-import Features from "@/components/home/Features";
-import Hero from "@/components/home/Hero";
-import Popular from "@/components/home/Popular";
-import Products from "@/components/home/Products";
-import Testimonials from "@/components/home/Testimonials";
+import React from "react";
 import { db } from "@/firebase";
 import { collection, query, getDocs } from "firebase/firestore";
+import Product from "@/components/Product";
 
-export default async function Home() {
+export default async function page() {
   const getProduct = async () => {
     const q = query(collection(db, "products"));
 
@@ -18,8 +15,6 @@ export default async function Home() {
         name: doc.data().name,
         price: doc.data().price,
         image: doc.data().image,
-        description: doc.data().description,
-        stock: doc.data().stock,
       };
       _products.push(data);
     });
@@ -30,12 +25,13 @@ export default async function Home() {
   const products = await getProduct();
 
   return (
-    <>
-      <Hero />
-      <Products products={products} />
-      <Features />
-      <Testimonials />
-      <Popular products={products} />
-    </>
+    <div className="px-40 py-10">
+      <h1 className="font-bold mb-5 sm:text-3xl">Catálogo</h1>
+      <div className="grid grid-cols-4 gap-5">
+        {products.map((product) => (
+          <Product key={product.id} item={product} />
+        ))}
+      </div>
+    </div>
   );
 }

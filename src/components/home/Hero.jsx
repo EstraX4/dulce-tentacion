@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import HotEmoji from "../emojis/HotEmoji";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -24,9 +25,9 @@ export default function Hero() {
             Todos los productos hechos con la mejor calidad
           </p>
         </div>
-        <button className="bg-red-500 text-white px-10 py-2 ">
+        <Link href="/catalogue" className="bg-red-500 text-white px-10 py-2 ">
           Ver productos
-        </button>
+        </Link>
       </div>
     </section>
   );

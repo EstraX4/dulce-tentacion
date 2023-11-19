@@ -26,7 +26,7 @@ export default function Features() {
           ))}
         </ul>
         <Link
-          href={"/products"}
+          href={"/catalogue"}
           className="bg-red-500 w-fit px-10 py-2 text-white mt-10 text-lg md:text-xl"
         >
           Ver productos
