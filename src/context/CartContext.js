@@ -4,6 +4,7 @@ const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = React.useState([]);
+  const [total, setTotal] = React.useState(0);
 
   const addToCart = (product) => {
     setCart((prevCart) => [...prevCart, product]);
@@ -37,9 +38,17 @@ export const CartProvider = ({ children }) => {
     getLocalStorage();
   }, []);
 
+  useEffect(() => {
+    let total = 0;
+    cart.forEach((item) => {
+      total += parseInt(item.price);
+    });
+    setTotal(total);
+  }, [cart]);
+
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, clearCart }}
+      value={{ cart, addToCart, removeFromCart, clearCart, total }}
     >
       {children}
     </CartContext.Provider>
