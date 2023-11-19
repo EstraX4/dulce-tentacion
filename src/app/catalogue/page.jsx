@@ -1,11 +1,11 @@
 import React from "react";
 import { db } from "@/firebase";
-import { collection, query, getDocs } from "firebase/firestore";
+import { collection, query, getDocs, where } from "firebase/firestore";
 import Product from "@/components/Product";
 
 export default async function page() {
   const getProduct = async () => {
-    const q = query(collection(db, "products"));
+    const q = query(collection(db, "products"), where("stock", ">", 0));
 
     const querySnapshot = await getDocs(q);
     const _products = [];

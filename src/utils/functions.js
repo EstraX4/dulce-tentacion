@@ -5,14 +5,14 @@ export function formatPrice(number) {
   }
 
   // Round the number to two decimal places
-  const priceRounded = Number(number).toFixed(2);
+  // const priceRounded = Number(number).toFixed(2);
 
   // Add thousand separators and currency symbol (e.g., "$")
   const formattedPrice = new Intl.NumberFormat("es-CO", {
     style: "currency",
     currency: "COP",
-    maximumSignificantDigits: 3,
-  }).format(priceRounded);
+    maximumSignificantDigits: 6,
+  }).format(number);
 
   return formattedPrice;
 }

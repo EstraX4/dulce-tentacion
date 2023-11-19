@@ -51,6 +51,7 @@ export default function Product({ product }) {
               {product && product.name}
             </h2>
             <p className="mb-5 opacity-50">{product && product.id}</p>
+            <p className="mb-5 opacity-50">Stock: {product && product.stock}</p>
             <h1 className="text-red-500 text-xl md:text-4xl text-left pb-4 sm:pb-6">
               {product && formatPrice(product.price)} COP
             </h1>

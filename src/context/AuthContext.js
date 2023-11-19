@@ -29,6 +29,7 @@ export const AuthProvider = ({ children }) => {
       const docRef = await setDoc(doc(db, "users", userCredential.user.uid), {
         name,
         email,
+        role: "user",
       });
 
       await setCookie(USERID_NAME, userCredential.user.uid, {

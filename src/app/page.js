@@ -4,11 +4,11 @@ import Popular from "@/components/home/Popular";
 import Products from "@/components/home/Products";
 import Testimonials from "@/components/home/Testimonials";
 import { db } from "@/firebase";
-import { collection, query, getDocs } from "firebase/firestore";
+import { collection, query, getDocs, where } from "firebase/firestore";
 
 export default async function Home() {
   const getProduct = async () => {
-    const q = query(collection(db, "products"));
+    const q = query(collection(db, "products"), where("stock", ">=", 1 ));
 
     const querySnapshot = await getDocs(q);
     const _products = [];

@@ -2,10 +2,16 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { IconCreditCard, IconShoppingCart } from "@tabler/icons-react";
+import {
+  IconCircleCheck,
+  IconCreditCard,
+  IconShoppingCart,
+} from "@tabler/icons-react";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/utils/functions";
+import { addDoc, collection, doc, increment, updateDoc } from "firebase/firestore";
+import { db } from "@/firebase";
 
 export default function Page() {
   const { user } = useAuth();
@@ -15,6 +21,7 @@ export default function Page() {
     1: Detalles
     2: Envio
     3: Pago
+    4: Finalizado
   */
   const [step, setStep] = useState(1);
   const [detailsData, setDetailsData] = useState(null);
@@ -27,13 +34,24 @@ export default function Page() {
       });
     }
 
+    if (step == 3) {
+      setDetailsData({
+        ...detailsData,
+        ...info,
+      });
+    }
+
     setStep(step + 1);
   };
 
   return (
     <div className="flex w-full min-h-[calc(100vh-5rem)]">
-      <div className="bg-white w-full md:w-1/2 px-10 md:pl-40 md:pr-20 flex flex-col relative py-10">
-        <Navegation setStep={setStep} step={step} />
+      <div
+        className={`bg-white w-full px-10 md:pl-40 md:pr-20 flex flex-col relative py-10 ${
+          step == 4 ? "md:w-full" : "md:w-1/2"
+        }`}
+      >
+        {step != 4 && <Navegation step={step} setStep={setStep} />}
         {step == 1 && <FormDeatils handleStep={handleStep} />}
         {step == 2 && (
           <FormShipping
@@ -49,62 +67,68 @@ export default function Page() {
             setStep={setStep}
           />
         )}
+        {step == 4 && <FormFinished data={detailsData} />}
       </div>
-      <div className="hidden md:flex flex-col pt-20 gap-4 bg-gray-100 w-1/2 px-10 md:pl-20 md:pr-40">
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-row justify-between">
-            <div className="w-1/2 aspect-square relative">
-              {cart.slice(0, 3).map((item, index) => (
-                <img
-                  key={item.id}
-                  className="w-full h-full object-cover absolute"
-                  src={item.image}
-                  alt="producto"
-                  style={{
-                    zIndex: cart.length - index,
-                    left: `${index}rem`,
-                    top: `${index}rem`,
-                  }}
-                />
-              ))}
-            </div>
-            <div className="flex flex-col">
-              <h2 className="text-black-500 text-xl text-right md:text-2xl">
+      {step != 4 && (
+        <div className="hidden md:flex flex-col pt-20 gap-4 bg-gray-100 w-1/2 px-10 md:pl-20 md:pr-40">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-row justify-between">
+              <div className="w-1/2 aspect-square relative">
+                {cart.slice(0, 3).map((item, index) => (
+                  <img
+                    key={item.id}
+                    className="w-full h-full object-cover absolute"
+                    src={item.image}
+                    alt="producto"
+                    style={{
+                      zIndex: cart.length - index,
+                      left: `${index}rem`,
+                      top: `${index}rem`,
+                    }}
+                  />
+                ))}
+              </div>
+              <div className="flex flex-col">
+                <h2 className="text-black-500 text-xl text-right md:text-2xl">
                   {cart[0]?.name}
-              </h2>
-              {cart.length > 1 && (
-                <p className="text-black-500 text-right opacity-60">{`y ${
-                  cart.length - 1
-                } más`}</p>
-              )}
+                </h2>
+                {cart.length > 1 && (
+                  <p className="text-black-500 text-right opacity-60">{`y ${
+                    cart.length - 1
+                  } más`}</p>
+                )}
 
-              <h1 className="text-black-500 text-xl text-right md:text-2xl mt-5 pb-4 sm:pb-6">
-                {formatPrice(total)} COP
-              </h1>
+                <h1 className="text-black-500 text-xl text-right md:text-2xl mt-5 pb-4 sm:pb-6">
+                  {formatPrice(total)} COP
+                </h1>
+              </div>
             </div>
-          </div>
 
-          <div className="flex justify-between mt-10">
-            <p>Subtotal</p>
-            <p>{formatPrice(total)} COP</p>
-          </div>
-          <div className="flex justify-between">
-            <p>Envío</p>
-            <p>Calculado en el siguente paso</p>
-          </div>
-          <div className="flex justify-between">
-            <p>Total</p>
-            <h2>{formatPrice(total)} COP</h2>
+            <div className="flex justify-between mt-10">
+              <p>Subtotal</p>
+              <p>{formatPrice(total)} COP</p>
+            </div>
+            <div className="flex justify-between">
+              <p>Envío</p>
+              <p>Calculado en el siguente paso</p>
+            </div>
+            <div className="flex justify-between">
+              <p>Total</p>
+              <h2>{formatPrice(total)} COP</h2>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
 
 function Navegation({ step, setStep }) {
   return (
-    <nav className="flex absolute top-0 md:left-40 mt-10" aria-label="Breadcrumb">
+    <nav
+      className="flex absolute top-0 md:left-40 mt-10"
+      aria-label="Breadcrumb"
+    >
       <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
         <li className="inline-flex items-center">
           <Link
@@ -406,8 +430,41 @@ function FormShipping({ handleStep, setStep, data }) {
 }
 
 function FormPayment({ handleStep, setStep, data }) {
+  const { cart, clearCart } = useCart();
+  const { user } = useAuth();
+
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+
+    cart.forEach(async (item) => {
+      const itemRef = doc(db, "products", item.id);
+      await updateDoc(itemRef, {
+        stock: increment(-1),
+      });
+    });
+
+    const docRef = await addDoc(collection(db, "sales"), {
+      amount: cart.length,
+      productsId: cart.map((item) => item.id),
+      userId: user.id,
+      total: cart.reduce(
+        (acc, item) => parseInt(acc) + parseInt(item.price),
+        0
+      ),
+      date: new Date(),
+    });
+
+    handleStep({ orderId: docRef.id });
+    setLoading(false);
+    clearCart();
+  };
+
   return (
-    <div className="flex flex-col gap-4 w-full mt-20">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full mt-20">
       {/* Secion 1 */}
       <div className="border rounded-xl border-[#B15C5733] p-5 flex flex-col gap-4">
         <div className="flex justify-between items-center w-full">
@@ -508,13 +565,34 @@ function FormPayment({ handleStep, setStep, data }) {
           Regresar a detalles
         </button>
         <button
-          type="button"
+          type="submit"
           className="w-[40%] flex justify-center items-center text-white bg-red-500 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-          onClick={handleStep}
         >
           Ir al pago
         </button>
       </div>
+    </form>
+  );
+}
+
+function FormFinished({ data }) {
+  const { user } = useAuth();
+  return (
+    <div className="mt-20 w-full h-full flex flex-col justify-start items-center">
+      <IconCircleCheck className="text-red-500" size={200} />
+      <h1 className="font-bold text-3xl">Pago Confirmado</h1>
+      <p className="text-red-500">ID de la orden: {data.orderId}</p>
+
+      <p className="mt-10 w-1/2 opacity-50">{`Gracias ${
+        user?.name.split(" ")[0]
+      } por comprar en Dulce Tentación. Ahora que su pedido está confirmado estará listo para ser enviado en 2 días. Por favor, compruebe su bandeja de entrada en el futuro para las actualizaciones de su pedido.`}</p>
+
+      <Link
+        href="/"
+        className="mt-10 w-[40%] flex justify-center items-center text-white bg-red-500 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+      >
+        Volver a la tienda
+      </Link>
     </div>
   );
 }
