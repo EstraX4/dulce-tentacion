@@ -61,8 +61,7 @@ export default function Footer() {
           <div className="w-full flex flex-col">
             <img src="/images/logo2.svg" alt="" className="w-32" />
             <p className="w-full md:w-1/2">
-              Tu satisfacción, nuestro compromiso: Bienvenidos a la tienda del
-              placer.
+              Tu satisfacción es nuestro compromiso
             </p>
           </div>
           <div className="flex md:flex-row flex-col w-full justify-center items-center gap-4">
