@@ -8,7 +8,7 @@ import { collection, query, getDocs, where } from "firebase/firestore";
 
 export default async function Home() {
   const getProduct = async () => {
-    const q = query(collection(db, "products"), where("stock", ">=", 1 ));
+    const q = query(collection(db, "products"), where("stock", ">", 0 ));
 
     const querySnapshot = await getDocs(q);
     const _products = [];
