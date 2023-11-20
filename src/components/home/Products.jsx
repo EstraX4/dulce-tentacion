@@ -12,7 +12,7 @@ export default function Products({ products }) {
         <p className="text-base">Pídelo para ti o para tus seres queridos</p>
       </div>
       <div className="md:grid grid-cols-1 md:grid-cols-4 w-full gap-8 hidden">
-        {products && products.map((product) => (
+        {products && products.slice(0, 8).map((product) => (
           <Product key={product.name} item={product} />
         ))}
       </div>
