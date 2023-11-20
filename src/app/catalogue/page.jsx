@@ -22,7 +22,7 @@ export default async function page() {
     return _products;
   };
 
-  const products = await getProduct();
+  let products = await getProduct();
 
   return (
     <div className="px-40 py-10">
